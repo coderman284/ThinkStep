@@ -643,7 +643,8 @@ try{
 
 
 const res =
-await fetch("/api/status");
+await fetch("https://biotechnology-lasting-dept-reuters.trycloudflare.com/status")
+
 
 
 
