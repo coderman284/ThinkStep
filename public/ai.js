@@ -1,116 +1,43 @@
-// ======================================
-// ThinkStep V2 AI Client
-// ======================================
+// =========================
+// ThinkStep AI Client
+// =========================
 
-
-async function askAIStream(question, onChunk) {
-
+async function askAI(question) {
 
     try {
 
-
         const response = await fetch(
-            "/api/chat",
+            "https://literally-boutique-big-compound.trycloudflare.com/hint",
             {
+                method:"POST",
 
-                method: "POST",
-
-                headers: {
-
-                    "Content-Type": "application/json"
-
+                headers:{
+                    "Content-Type":"application/json"
                 },
 
-
                 body: JSON.stringify({
-
                     question: question
-
                 })
-
-
             }
         );
 
 
+        const text = await response.text();
 
-        if (!response.ok) {
-
-            throw new Error(
-                "AI server error"
-            );
-
-        }
-
-
-
-
-        const reader =
-        response.body.getReader();
-
-
-
-        const decoder =
-        new TextDecoder();
-
-
-
-        while (true) {
-
-
-            const {
-                done,
-                value
-            } =
-            await reader.read();
-
-
-
-            if (done) {
-
-                break;
-
-            }
-
-
-
-            const text =
-            decoder.decode(
-                value
-            );
-
-
-
-            if (text) {
-
-
-                onChunk(text);
-
-
-            }
-
-
-        }
-
-
+        return text || "No response.";
 
     }
 
-    catch(error) {
 
+    catch(error){
 
         console.log(
-            "AI Error:",
+            "AI error:",
             error
         );
 
-
-        onChunk(
-            "❌ Cannot connect to ThinkStep."
-        );
-
+        return "❌ Cannot connect to ThinkStep.";
 
     }
-
 
 }
