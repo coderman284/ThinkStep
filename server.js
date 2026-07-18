@@ -1,6 +1,6 @@
-// ======================================
-// ThinkStep V2 Server
-// ======================================
+// =========================
+// ThinkStep Server
+// =========================
 
 require("dotenv").config();
 
@@ -15,9 +15,9 @@ const app = express();
 const PORT = 3000;
 
 
-// ======================================
+// =========================
 // Middleware
-// ======================================
+// =========================
 
 app.use(cors());
 
@@ -26,160 +26,124 @@ app.use(express.json());
 app.use(express.static("public"));
 
 
-
-// ======================================
+// =========================
 // Rate Limit
-// ======================================
+// =========================
 
 const aiLimiter = rateLimit({
 
     windowMs: 60 * 1000,
 
-    max: 100
+    max: 30,
+
+    message: {
+        error: "Too many requests. Try again later."
+    }
 
 });
 
 
-app.use("/api/chat", aiLimiter);
+app.use("/hint", aiLimiter);
 
 
+// =========================
+// Status Check
+// =========================
 
-// ======================================
-// Status
-// ======================================
-
-app.get("/api/status", (req,res)=>{
-
+app.get("/status", (req, res) => {
 
     res.json({
 
-        app:"ThinkStep",
+        app: "ThinkStep",
 
-        status:"running",
+        status: "running",
 
-        ai:"Ollama"
+        ai: "Ollama"
 
     });
-
 
 });
 
 
+// =========================
+// AI Chat
+// =========================
+
+app.post("/hint", async (req, res) => {
 
 
-// ======================================
-// AI Streaming Chat
-// ======================================
-
-app.post("/api/chat", async(req,res)=>{
-
-
-    const question =
-    req.body.question;
-
+    const question = req.body.question;
 
 
     if(!question){
 
-        return res.status(400).json({
-
-            error:"No question"
-
-        });
+        return res.send(
+            "Please ask a question."
+        );
 
     }
 
 
-
-    try{
-
-
-        const ollama =
-        await axios({
-
-            method:"POST",
-
-            url:"http://127.0.0.1:11434/api/generate",
+    res.setHeader(
+        "Content-Type",
+        "text/plain"
+    );
 
 
-            responseType:"stream",
+    try {
 
 
-            data:{
+        const ollamaResponse = await axios({
+
+            method: "post",
+
+            url: "http://localhost:11434/api/generate",
 
 
-                model:"qwen2.5:7b",
+            data: {
 
+                model: "qwen2.5:7b",
 
-                prompt:`
+                prompt:
 
-You are ThinkStep, a friendly AI tutor.
+`You are ThinkStep, a friendly AI tutor.
 
 Rules:
 - Explain step by step.
 - Use simple language.
-- Keep answers helpful.
+- Be helpful.
 - Ask questions when teaching.
 
 Student:
-${question}
+${question}`,
 
-`,
+                stream: true
+
+            },
 
 
-                stream:true
-
-
-            }
-
+            responseType: "stream"
 
         });
 
 
 
-
-        res.setHeader(
-
-            "Content-Type",
-
-            "text/plain"
-
-        );
-
-
-        res.setHeader(
-
-            "Transfer-Encoding",
-
-            "chunked"
-
-        );
-
-
-
-
-        ollama.data.on(
-
+        ollamaResponse.data.on(
             "data",
-
-            chunk=>{
+            chunk => {
 
 
                 const lines =
-
                 chunk.toString()
-
                 .split("\n")
-
                 .filter(Boolean);
 
 
 
+                lines.forEach(line => {
 
-                for(const line of lines){
 
-
-                    try{
+                    try {
 
 
                         const json =
@@ -189,67 +153,51 @@ ${question}
 
                         if(json.response){
 
-
                             res.write(
-
                                 json.response
-
                             );
-
 
                         }
 
 
                     }
 
-                    catch{}
+                    catch(error){
 
-                }
-
-
-            }
+                    }
 
 
-        );
+                });
+
+
+            });
 
 
 
-
-        ollama.data.on(
-
+        ollamaResponse.data.on(
             "end",
-
-            ()=>{
-
+            () => {
 
                 res.end();
 
-
-            }
-
-        );
-
-
+            });
 
 
     }
+
 
     catch(error){
 
 
         console.log(
-
-            "Ollama Error:",
-
+            "Ollama error:",
             error.message
-
         );
-
 
 
         res.status(500).send(
 
-            "❌ Ollama is not running."
+            "❌ Cannot connect to Ollama."
 
         );
 
@@ -260,18 +208,16 @@ ${question}
 });
 
 
+// =========================
+// Start Server
+// =========================
 
-
-// ======================================
-// Start
-// ======================================
-
-app.listen(PORT,()=>{
+app.listen(PORT, () => {
 
 
     console.log(
 
-        `💡 ThinkStep running on http://localhost:${PORT}`
+        `💡 ThinkStep running at http://localhost:${PORT}`
 
     );
 
