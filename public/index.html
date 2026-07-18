@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ThinkStep 💡</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+
+
+<div class="app">
+
+
+<!-- =====================
+     LEFT SIDEBAR
+===================== -->
+
+<aside class="left-sidebar">
+
+
+    <div class="logo">
+        💡 ThinkStep
+    </div>
+
+
+    <button id="newChatBtn">
+        ➕ New Chat
+    </button>
+
+
+
+    <h3>
+        📚 Subjects
+    </h3>
+
+
+    <div class="subjects">
+
+
+        <button data-subject="Math">
+            ➗ Math
+        </button>
+
+
+        <button data-subject="Science">
+            🔬 Science
+        </button>
+
+
+        <button data-subject="English">
+            📖 English
+        </button>
+
+
+        <button data-subject="History">
+            🌎 History
+        </button>
+
+
+    </div>
+
+
+
+
+    <h3>
+        💬 Chats
+    </h3>
+
+
+    <div id="chatList">
+
+    </div>
+
+
+</aside>
+
+
+
+
+
+
+<!-- =====================
+     CHAT AREA
+===================== -->
+
+<main class="chat-area">
+
+
+
+<header class="topbar">
+
+    <span id="status">
+        🟡 Checking...
+    </span>
+
+</header>
+
+
+
+
+<div id="chat">
+
+
+</div>
+
+
+
+
+
+<div class="input-area">
+
+
+<input
+
+id="question"
+
+placeholder="Ask ThinkStep..."
+
+autocomplete="off"
+
+/>
+
+
+
+
+<button id="sendBtn">
+
+Send
+
+</button>
+
+
+
+</div>
+
+
+
+</main>
+
+
+
+
+
+
+
+<!-- =====================
+     RIGHT SIDEBAR
+===================== -->
+
+
+<aside class="right-sidebar">
+
+
+
+<h2>
+👤 Profile
+</h2>
+
+
+
+
+<div class="card">
+
+
+<div class="avatar">
+
+👤
+
+</div>
+
+
+
+<h3 id="profileName">
+
+Student
+
+</h3>
+
+
+
+<button id="editProfileBtn">
+
+✏️ Edit Profile
+
+</button>
+
+
+
+
+<div id="profileEditor" class="hidden">
+
+
+<input
+
+id="profileInput"
+
+placeholder="Name"
+
+>
+
+
+
+<button id="saveProfileBtn">
+
+Save
+
+</button>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+<div class="card">
+
+
+<h3>
+⚙️ Settings
+</h3>
+
+
+
+<button id="themeBtn">
+
+🌙 Theme
+
+</button>
+
+
+
+<button id="languageBtn">
+
+🌎 Language
+
+</button>
+
+
+
+</div>
+
+
+
+
+</aside>
+
+
+
+
+
+</div>
+
+
+
+
+
+<script src="ai.js"></script>
+
+<script src="script.js"></script>
+
+<script src="ui.js"></script>
+
+
+</body>
+
+</html>
