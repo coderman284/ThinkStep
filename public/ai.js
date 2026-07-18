@@ -5,74 +5,54 @@
 
 
 const THINKSTEP_SERVER =
-"https://biotechnology-lasting-dept-reuters.trycloudflare.com";
+"https://fantastic-expects-beth-minimize.trycloudflare.com";
 
 
 
 // =========================
-// Ask AI
+// Send Question To AI
 // =========================
 
 async function askAI(question) {
 
-
     try {
 
-
         const response = await fetch(
-
             THINKSTEP_SERVER + "/hint",
-
             {
-
                 method: "POST",
 
                 headers: {
-
                     "Content-Type": "application/json"
-
                 },
 
                 body: JSON.stringify({
-
                     question: question
-
                 })
-
             }
-
         );
 
 
-
-        const answer =
-        await response.text();
+        const answer = await response.text();
 
 
-
-        if(answer){
+        if(answer) {
 
             return answer;
 
         }
 
 
-
-        return "No response received.";
+        return "No response from ThinkStep.";
 
     }
 
 
+    catch(error) {
 
-    catch(error){
-
-
-        console.log(
-
+        console.error(
             "ThinkStep AI Error:",
-
             error
-
         );
 
 
@@ -80,16 +60,19 @@ async function askAI(question) {
 
     }
 
-
 }
 
 
 
 // =========================
-// Check Server Status
+// Check ThinkStep Status
 // =========================
 
-async function checkThinkStepStatus(){
+async function checkThinkStepStatus() {
+
+
+    const status =
+    document.getElementById("status");
 
 
     try {
@@ -101,20 +84,10 @@ async function checkThinkStepStatus(){
         );
 
 
-        if(response.ok){
+        if(response.ok) {
 
 
-            const data =
-            await response.json();
-
-
-
-            const status =
-            document.getElementById("status");
-
-
-
-            if(status){
+            if(status) {
 
                 status.innerHTML =
                 "🟢 Online";
@@ -122,24 +95,27 @@ async function checkThinkStepStatus(){
             }
 
 
-            return data;
-
+            return true;
 
         }
+
+
+        throw new Error("Server error");
 
 
     }
 
 
-    catch(error){
+    catch(error) {
 
 
-        const status =
-        document.getElementById("status");
+        console.error(
+            "Status Error:",
+            error
+        );
 
 
-
-        if(status){
+        if(status) {
 
             status.innerHTML =
             "🔴 Offline";
@@ -147,14 +123,15 @@ async function checkThinkStepStatus(){
         }
 
 
-    }
+        return false;
 
+    }
 
 }
 
 
 
-// Start status check
+// Check status when page loads
 
 window.addEventListener(
 "DOMContentLoaded",
