@@ -7,7 +7,7 @@ async function askAI(question) {
     try {
 
         const response = await fetch(
-            "https://literally-boutique-big-compound.trycloudflare.com/hint",
+            "https://apt-erp-cache-mounts.trycloudflare.com/hint",
             {
                 method:"POST",
 
