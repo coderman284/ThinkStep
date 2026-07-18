@@ -4,6 +4,15 @@
 // =========================
 
 
+const THINKSTEP_SERVER =
+"https://biotechnology-lasting-dept-reuters.trycloudflare.com";
+
+
+
+// =========================
+// Ask AI
+// =========================
+
 async function askAI(question) {
 
 
@@ -12,19 +21,17 @@ async function askAI(question) {
 
         const response = await fetch(
 
-            "https://apt-erp-cache-mounts.trycloudflare.com/hint",
+            THINKSTEP_SERVER + "/hint",
 
             {
 
                 method: "POST",
-
 
                 headers: {
 
                     "Content-Type": "application/json"
 
                 },
-
 
                 body: JSON.stringify({
 
@@ -38,7 +45,8 @@ async function askAI(question) {
 
 
 
-        const answer = await response.text();
+        const answer =
+        await response.text();
 
 
 
@@ -49,11 +57,11 @@ async function askAI(question) {
         }
 
 
+
         return "No response received.";
 
-
-
     }
+
 
 
     catch(error){
@@ -74,3 +82,84 @@ async function askAI(question) {
 
 
 }
+
+
+
+// =========================
+// Check Server Status
+// =========================
+
+async function checkThinkStepStatus(){
+
+
+    try {
+
+
+        const response =
+        await fetch(
+            THINKSTEP_SERVER + "/status"
+        );
+
+
+        if(response.ok){
+
+
+            const data =
+            await response.json();
+
+
+
+            const status =
+            document.getElementById("status");
+
+
+
+            if(status){
+
+                status.innerHTML =
+                "🟢 Online";
+
+            }
+
+
+            return data;
+
+
+        }
+
+
+    }
+
+
+    catch(error){
+
+
+        const status =
+        document.getElementById("status");
+
+
+
+        if(status){
+
+            status.innerHTML =
+            "🔴 Offline";
+
+        }
+
+
+    }
+
+
+}
+
+
+
+// Start status check
+
+window.addEventListener(
+"DOMContentLoaded",
+()=>{
+
+    checkThinkStepStatus();
+
+});
